@@ -1,0 +1,101 @@
+[build-system]
+requires = ["setuptools", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "demo-app"
+authors = []
+maintainers = []
+description = ""
+readme = "README.md"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+dependencies = [
+  "bokeh>=3.1.0",
+  "chainlit>=2.0.1",
+  "llm-agent[data-processing] @ git+ssh://git@repo.element84.com/noaa_km_nlp/llm-agent.git",
+]
+dynamic = ["version"]
+
+[tool.setuptools_scm]
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+testpaths = ["tests"]
+
+[project.urls]
+Gitlab = "https://repo.element84.com/noaa_km_nlp/demo-app"
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3.3",
+  "ruff>=0.6.8",
+  "pyright>=1.1.381",
+  "build>=1.2.2",
+  "pre-commit>=3.8.0",
+  "pre-commit-hooks>=4.6.0",
+  "ipython>=8.28.0",
+]
+dask = ["dask-cloudprovider[aws]"]
+
+[tool.pyright]
+include = ["src/"]
+ignore = ["**/tests/**", "**/venv/**", "*.pyc"]
+typeCheckingMode = "strict"
+reportGeneralTypeIssues = true
+reportImplicitStringConcatenation = "none"
+reportPropertyTypeMismatch = "error"
+reportShadowedImports = "error"
+reportTypedDictNotRequiredAccess = "none"
+reportUninitializedInstanceVariable = "error"
+reportUnknownArgumentType = "error"
+reportUnknownMemberType = "error"
+reportUnknownVariableType = "error"
+reportUnnecessaryComparison = "error"
+reportIncompatibleVariableOverride = "none"
+
+
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint]
+# http://docs.astral.sh/ruff/rules/
+select = ['ALL']
+ignore = [
+  # Unnecessary assignment before return statement
+  'RET504',
+  # Trailing comma missing
+  'COM812',
+  # Missing docstring for module
+  'D100',
+  # Missing docstring in magic method
+  'D105',
+  # 1 blank line required before class docstring
+  'D203',
+  # Multi-line docstring summary should start at the second line
+  'D213',
+]
+
+[tool.ruff.lint.per-file-ignores]
+'__init__.py' = [
+  # Module level import not at top of cell
+  'E402',
+  # Imported but unused
+  'F401',
+]
+'tests/**/*' = [
+  # Use of assert detected
+  'S101',
+  # Missing return type annotation for public function
+  'ANN201',
+  # Missing docstrings
+  'D1',
+  # Private member accessed
+  'SLF001',
+  # magic values
+  'PLR2004',
+]

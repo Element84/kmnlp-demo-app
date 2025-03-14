@@ -1,0 +1,11 @@
+# NOTE: It seems surprising, but do not ignore .git.
+# The command `natural-language-geocoding init` that runs in the image expects
+# to be run from a git repository.
+.pytest_cache
+.python-version
+.ruff_cache
+.venv
+Dockerfile
+Dockerfile.*
+cdktf.out
+dist

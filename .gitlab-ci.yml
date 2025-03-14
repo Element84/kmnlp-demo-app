@@ -1,0 +1,44 @@
+image: python:3.12-slim
+
+before_script:
+  # Runs the script and only prints the output if it fails.
+  - |
+    if ! output=$(scripts/gitlab_before_script.sh 2>&1); then
+      echo "Script failed with output:"
+      echo "$output"
+      exit 1
+    fi
+
+stages:
+  - build
+  - lint
+  - publish
+  - deploy
+
+build:
+  stage: build
+  services:
+    - name: docker:27.5.1-dind
+  script:
+    - scripts/build-ci.sh
+
+lint:
+  stage: lint
+  services:
+    - name: docker:27.5.1-dind
+  script:
+    - docker run --rm chainlit-demo/build /app/scripts/lint-ci.sh
+
+publish:
+  stage: publish
+  script:
+    - scripts/deploy-ci.sh
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+deploy:
+  stage: deploy
+  trigger:
+    project: noaa_km_nlp/kmnlp-infrastructure
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
