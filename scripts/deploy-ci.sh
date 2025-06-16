@@ -37,8 +37,8 @@ docker buildx build \
     --platform linux/amd64 \
     .
 
-GITLAB_DEPLOY_ROLE=${GITLAB_DEPLOY_ROLE:-}
-CREDS=$(aws sts assume-role --role-arn "$GITLAB_DEPLOY_ROLE" --role-session-name "git-lab-pipeline-push-container-images")
+GITLAB_DEPLOY_ROLE_ARN=${GITLAB_DEPLOY_ROLE_ARN:-}
+CREDS=$(aws sts assume-role --role-arn "$GITLAB_DEPLOY_ROLE_ARN" --role-session-name "git-lab-pipeline-push-container-images")
 AWS_ACCESS_KEY_ID=$(echo "$CREDS" | jq -r '.Credentials.AccessKeyId')
 AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r '.Credentials.SecretAccessKey')
 AWS_SESSION_TOKEN=$(echo "$CREDS" | jq -r '.Credentials.SessionToken')

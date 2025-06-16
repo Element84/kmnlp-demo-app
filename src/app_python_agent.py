@@ -1,22 +1,24 @@
+import logging
+
 import chainlit as cl
 
-from demo_app import ctx_session_id
-from demo_app.agent_adapters.orchestration_agent import (
-    OrchestrationAgentChainlitAdapter,
+from demo_app.agent_adapters.scientific_python_agent import (
+    ScientificPythonAgentChainlitAdapter,
 )
 
-agent_adapter: OrchestrationAgentChainlitAdapter
+log = logging.getLogger(__name__)
+
+agent_adapter: ScientificPythonAgentChainlitAdapter
 
 
 @cl.on_chat_start  # type: ignore[reportUnknownMemberType]
 async def init_agent() -> None:
     """Initialize agent."""
     global agent_adapter  # noqa: PLW0603
-    agent_adapter = OrchestrationAgentChainlitAdapter()
+    agent_adapter = ScientificPythonAgentChainlitAdapter()
 
 
 @cl.on_message  # type: ignore[reportUnknownMemberType]
 async def message_handler(message: cl.Message) -> None:
     """Handle user message."""
-    ctx_session_id.set(cl.user_session.get("id"))  # type: ignore[reportUnknownMemberType]
     await agent_adapter.process_message(message)

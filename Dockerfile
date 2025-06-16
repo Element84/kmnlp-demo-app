@@ -18,7 +18,7 @@ ENV PYTHONUNBUFFERED=1
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git  openssh-client
 
-# Add GitLab's SSH key opnly if running locally.
+# Add GitLab's SSH key only if running locally.
 # CI will use HTTPS to fetch from GitLab.
 RUN \
     if [ "${BUILD_ENV_IS_CI:-0}" != "1" ]; then \
@@ -42,19 +42,23 @@ RUN uv venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Add requirements file so we can install our dependencies
-COPY requirements.txt .
+COPY pyproject.toml .
+COPY uv.lock .
+
+# Ensure lock file is up to date
+RUN uv lock --check
 
 # Setup venv and call `natural-language-geocoding init`.
 # Do not mount SSH if CI, do if local
 RUN \
     if [ "${BUILD_ENV_IS_CI:-0}" -eq 1 ]; then \
-      uv pip sync requirements.txt; \
+      uv sync --all-extras; \
       natural-language-geocoding init; \
     fi
 
 RUN --mount=type=ssh \
     if [ "${BUILD_ENV_IS_CI:-0}" != "1" ]; then \
-      uv pip sync requirements.txt; \
+      uv sync --all-extras; \
       natural-language-geocoding init; \
     fi
 
@@ -87,7 +91,7 @@ ENV PATH="/app/.venv/bin:$PATH"
 EXPOSE 8000
 
 # Command to run the app
-CMD ["chainlit", "run", "src/app.py", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["chainlit", "run", "src/app.py", "-h", "--host", "0.0.0.0", "--port", "8000"]
 
 ##############
 # Dask image #

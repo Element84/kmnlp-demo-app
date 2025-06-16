@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools", "setuptools_scm"]
+requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 
@@ -18,8 +18,6 @@ dependencies = [
 ]
 dynamic = ["version"]
 
-[tool.setuptools_scm]
-
 [tool.pytest.ini_options]
 pythonpath = "src"
 testpaths = ["tests"]
@@ -29,6 +27,7 @@ Gitlab = "https://repo.element84.com/noaa_km_nlp/demo-app"
 
 [project.optional-dependencies]
 dev = [
+  "pyinstrument>=5.0.2",
   "pytest>=8.3.3",
   "ruff>=0.6.8",
   "pyright>=1.1.381",
@@ -64,38 +63,38 @@ convention = "google"
 
 [tool.ruff.lint]
 # http://docs.astral.sh/ruff/rules/
-select = ['ALL']
+select = ["ALL"]
 ignore = [
   # Unnecessary assignment before return statement
-  'RET504',
+  "RET504",
   # Trailing comma missing
-  'COM812',
+  "COM812",
   # Missing docstring for module
-  'D100',
+  "D100",
   # Missing docstring in magic method
-  'D105',
+  "D105",
   # 1 blank line required before class docstring
-  'D203',
+  "D203",
   # Multi-line docstring summary should start at the second line
-  'D213',
+  "D213",
 ]
 
 [tool.ruff.lint.per-file-ignores]
-'__init__.py' = [
+"__init__.py" = [
   # Module level import not at top of cell
-  'E402',
+  "E402",
   # Imported but unused
-  'F401',
+  "F401",
 ]
-'tests/**/*' = [
+"tests/**/*" = [
   # Use of assert detected
-  'S101',
+  "S101",
   # Missing return type annotation for public function
-  'ANN201',
+  "ANN201",
   # Missing docstrings
-  'D1',
+  "D1",
   # Private member accessed
-  'SLF001',
+  "SLF001",
   # magic values
-  'PLR2004',
+  "PLR2004",
 ]
